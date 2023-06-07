@@ -1,0 +1,68 @@
+建立API專案指令
+dotnet new webapi -n 'projectName' -f net6.0
+安裝相關套件
+dotnet add package System.Data.SqlClient   --sqlserver
+&
+dotnet add package MySql.Data   --mysql
+
+
+在控制器建立變數存放連線字串
+private readonly string _connectionString = "server=localhost;port=3306;database=mydb;user=root;password=mypassword;";
+用 MySqlConnection 建立資料庫連線
+MySqlConnection connection = new MySqlConnection(connectionString);
+
+開啟資料庫連線
+connection.Open();
+建立SQL 指令字串
+string query = "SELECT * FROM Users";
+用 MySqlCommand 執行的 SQL 指令與連線
+MySqlCommand command = new MySqlCommand(query, connection);
+
+使用DataAdapter 方式讀取資料
+新建一個dataTable物件
+DataTable dataTable = new DataTable();
+新建dataAdapter物件並給予指令
+MySqlDataAdapter dataAdapter = new MySqlDataAdapter(command)
+將dataAdapter帶回的資料放到dataTable
+dataAdapter.Fill(dataTable);
+將資料回傳到畫面
+return Ok(dataTable);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADO.NET 提供了兩種主要的方式讀取資料庫中的資料：
+
+使用 ExecuteReader 方法讀取資料庫中的資料，它會回傳一個 DataReader 物件，可以透過該物件來讀取資料庫中的資料。
+
+使用 DataAdapter 和 DataSet 物件，先透過 DataAdapter 讀取資料庫中的資料，然後將資料填入 DataSet 物件中，最後透過 DataSet 物件中的 DataTable 或 DataView 屬性取得資料。
+
+在上述兩種方式中，第一種方式通常會比較適合讀取大量資料，因為它是逐筆讀取，不需要一次將整個資料集讀取到記憶體中；而第二種方式則通常比較適合讀取較小的資料集，因為需要一次性將整個資料集讀取到記憶體中。
